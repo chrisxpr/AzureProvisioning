@@ -1,0 +1,1527 @@
+{
+	"ad": {
+		"groups" : [
+			{
+				"type":"devops",
+				"name":"{prefix}devops",
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			},
+			{
+				"type":"developers",
+				"name":"{prefix}developers",
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			},
+			{
+				"type":"testers",
+				"name":"{prefix}testers",
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			},
+			{
+				"type":"application",
+				"name":"{prefix}application",
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			}
+		]
+	},
+	"resourceGroups": [
+		{
+			"type" : "infra",
+			"name" : "{prefix}-{environment}-infra",
+			"location": "syd",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "true",
+					"contributors" : "devops,developers"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true",
+					"contributors" : "devops,developers"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true",
+					"contributors" : "devops"
+				}
+			]
+		},
+		{
+			"type" : "applinux",
+			"name" : "{prefix}-{environment}-application-linux-{locationKey}",
+			"location": "syd,mel",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "true",
+					"contributors" : "devops,developers"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true",
+					"contributors" : "devops,developers"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true",
+					"contributors" : "devops"
+				}
+			]
+		},
+		{
+			"type" : "services",
+			"name" : "{prefix}-{environment}-services-{locationKey}",
+			"location": "syd",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "true",
+					"contributors" : "devops,developers"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true",
+					"contributors" : "devops,developers"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true",
+					"contributors" : "devOps"
+				}
+			]
+		},
+		{
+			"type" : "database",
+			"name" : "{Prefix}-{Env}-database",
+			"location": "syd",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "false",
+					"contributors" : "devOps,developers"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "false",
+					"contributors" : "devOps,developers"
+					
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true",
+					"contributors" : "devOps"
+				}
+			]
+		}
+	],
+	"keyVaults" : {
+		"logAnalytics" : {
+			"workspaceName": "law-{Prefix}-auditmetrics-{Env}-{LocationKey}",
+			"sku": "Standard",
+			"diagnosticName" : "kv-diag",
+			"metrics" : "AllMetrics",
+			"location": "syd"
+		},	
+		"list" : [
+			{
+				"type" : "creditsimpledevops",
+				"name" : "dbcs-unicorn-dev-kv ",
+				"rg"   : "dbcs-unicorn-dev-rg",
+				"envPrefix" : "",
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "false"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "false"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "false"
+					}
+				]
+			},
+			{
+				"type" : "devlocal",
+				"name" : "{LongPrefix}-app-dev",
+				"rgKey" : "infra",
+				"envPrefix" : "devlocal",
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "false"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "false"
+					}
+				]
+			},
+			{
+				"type" : "app",
+				"name" : "{LongPrefix}-app-{Env}",
+				"rgKey" : "infra",
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "false",
+						"defaultRoleGroups" : "developers,testers,application"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true",
+						"defaultRoleGroups" : "developers,testers,application"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true",
+						"defaultRoleGroups" : "application",
+						"adminRoleGroups" : "devOps"
+					}
+				]
+			},
+			{
+				"type"  : "devops",
+				"name"  : "{LongPrefix}-devops",
+				"rgKey" : "devtestinfra",
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "false",
+						"defaultRoleGroups" : "",
+						"adminRoleGroups" : "devOps"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "false",
+						"defaultRoleGroups" : "",
+						"adminRoleGroups" : "devOps"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "false"
+					}
+				]
+			},
+			{
+				"type"  : "devopsprod",
+				"name"  : "{LongPrefix}-devops-prod",
+				"rgKey" : "infra",
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "false"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "false"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true",
+						"defaultRoleGroups" : "",
+						"adminRoleGroups" : "devOps"
+					}
+				]
+			}
+		]
+	},
+	"databaseServer":  	{
+		"name" : "appdb",
+		"sqlAdminLoginSecretKeyName" : "sqlAdminLogin{LocationKey}",
+		"sqlAdminPasswordSecretKeyName" : "sqlAdminPassword{LocationKey}",
+		"sqlServerStartIp" : "49.255.172.122",
+		"sqlServerEndIp" : "49.255.172.122",
+		"defaultFWRuleName" : "Default-Access",
+		"type": "paas",
+		"deploy" : [
+			{
+				"env" : "dev",
+				"enabled" : "false",
+				"defaultDbSize":"S1",
+				"kvKey" : "devops",
+				"rgKey" : "database",
+				"adminRoleGroup" : "devOps",
+				"addFirewallRule" : "true",
+				"locations" : "syd",
+				"primaryLocation": "syd",
+				"serverName" : "{LongPrefix}-db-devtest-{LocationKey}"
+			},
+			{
+				"env" : "uat",
+				"enabled" : "false",
+				"defaultDbSize" : "S1",
+				"kvKey" : "devops",
+				"rgKey" : "database",
+				"adminRoleGroup" : "devOps",
+				"addFirewallRule" : "true",
+				"locations" : "syd",
+				"primaryLocation": "syd",
+				"serverName" : "{LongPrefix}-db-devtest-{LocationKey}"
+			},
+			{
+				"env" : "prod",
+				"enabled" : "true",
+				"defaultDbSize": "S1",
+				"kvKey" : "devopsprod",
+				"rgKey" : "database",
+				"adminRoleGroup" : "devOps",
+				"addFirewallRule" : "true",
+				"locations" : "syd,mel",
+				"primaryLocation": "syd",
+				"secondaryLocation": "mel",
+				"serverName" : "{LongPrefix}-db-{Env}-{LocationKey}"
+			}
+		]
+	},
+	"databases": [
+		{
+			"env" : "dev",
+			"name" : "{LongPrefix}{Env}",
+			"enabled" : "false",
+			"defaultDbSize":"S1",
+			"kvKey" : "devops",
+			"rgKey" : "database",
+			"location" : "syd",
+			"server" : "appdb"
+		},
+		{
+			"env" : "uat",
+			"name" : "{LongPrefix}{Env}",
+			"enabled" : "false",
+			"defaultDbSize":"S2",
+			"kvKey" : "devops",
+			"rgKey" : "database",
+			"location" : "syd",
+			"server" : "appdb"
+		},
+		{
+			"env" : "prod",
+			"name" : "{LongPrefix}{Env}",
+			"enabled" : "true",
+			"defaultDbSize":"S3",
+			"kvKey" : "devopsprod",
+			"rgKey" : "database",
+			"location" : "syd",
+			"server" : "appdb"
+		}
+	],
+	"storage" : [
+		{
+			"key":"appstorage",
+			"accountName" : "{LongPrefix}{Env}{LocationKey}",
+			"kind" : "StorageV2",
+			"location" : "syd",
+			"rgKey" : "infra",
+			"saveKeys" : "true",
+			"storagePrimaryKeyName" : "appStoragePrimaryKeyUAT",
+			"storageSecondaryKeyName" : "appStorageSecondaryKeyUAT",
+			"containers" : [
+				{
+					"name" : "assets",
+					"accessLevel" : "blob"
+				},
+				{
+					"name" : "local-miltongrahamau-transfers",
+					"accessLevel" : "off"
+				},
+				{
+					"name" : "miltongrahamau-transfers",
+					"accessLevel" : "off"
+				},
+				{
+					"name" : "tosquareawayazureblob",
+					"accessLevel" : "off"
+				}
+			],
+			"cdn" : {
+				"profileName" : "{LongPrefix}-{Env}-cdn",
+				"tier" : "Standard_Verizon"
+			
+			},
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "false",
+					"sku" : "Standard_LRS",
+					"kvKey" : "devops",
+					"cdnEnabled" : "false"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "false",
+					"sku" : "Standard_LRS",
+					"kvKey" : "devops",
+					"cdnEnabled" : "true"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true",
+					"sku" : "Standard_GRS",
+					"kvKey" : "devopsprod",
+					"cdnEnabled" : "true"
+				}
+			]
+		},
+		{
+			"key":"funcstorage",
+			"accountName": "{LongPrefix}azfsp{Env}{LocationKey}",
+			"kind" : "StorageV2",
+			"location":"syd",
+			"rgKey":"services",
+			"saveKeys" : "false",
+			"storagePrimaryKeyName" : "",
+			"storageSecondaryKeyName" : "",
+			"containers" : [],
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "true",
+					"sku" : "Standard_LRS",
+					"kvKey" : "devops",
+					"cdnEnabled" : "false"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true",
+					"sku" : "Standard_LRS",
+					"kvKey" : "devops",
+					"cdnEnabled" : "false"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true",
+					"sku" : "Standard_GRS",
+					"kvKey" : "devopsprod",
+					"cdnEnabled" : "false"
+				}
+			]
+		}
+	],
+	"cache" : {
+		"type" : "redis",
+		"AccountName":"{Prefix}-redis-{Env}",
+		"SKU":"Basic",
+		"SKUSize":"C0",
+		"AccountNameKeyName":"redisAccountName",
+		"PrimaryKeyName":"redisPrimaryKey",
+		"SecondaryKeyName":"redisSecondaryKey",
+		"rgKey":"infra",
+		"location":"syd",
+		"deploy" : [
+			{
+				"env" : "dev",
+				"enabled" : "true",
+				"kvKey" : "devops"
+			},
+			{
+				"env" : "uat",
+				"enabled" : "false",
+				"kvKey" : "devops"
+			},
+			{
+				"env" : "prod",
+				"enabled" : "true",
+				"kvKey" : "devopsprod"
+			}
+		]
+	},
+    "serviceBus" : {
+		"namespace":"{LongPrefix}-sb-{Env}",
+		"serviceBusNamespaceKeyName":"serviceBusNamespace",
+		"serviceBusConnectionStringKeyName":"serviceBusConnectionString",
+		"rgKey":"infra",
+		"location":"syd",
+		"deploy" : [
+			{
+				"env" : "dev",
+				"enabled" : "false",
+				"sku": "Standard",
+				"kvKey" : "devops",
+				"serviceBusDataOwnerRole" : "developers,application"
+			},
+			{
+				"env" : "uat",
+				"enabled" : "true",
+				"sku": "Standard",
+				"kvKey" : "devops",
+				"serviceBusDataOwnerRole" : "developers,application"
+			},
+			{
+				"env" : "prod",
+				"enabled" : "true",
+				"sku": "Premium",
+				"kvKey" : "devopsprod",
+				"serviceBusDataOwnerRole" : "application"
+			}
+		],
+		"queues" : [
+			{	
+				"name":"messagecontaineremailqueue-{Env}",
+				"partitioned": "true"
+			},
+			{
+				"name":"messagecontainersmsqueue-{Env}",
+				"partitioned": "true"
+			},
+			{
+				"name":"messagerecordqueue-{Env}",
+				"partitioned": "true"
+			},
+			{	
+				"name":"logentryapiqueue-{Env}",
+				"partitioned": "true"
+			},
+			{
+				"name":"auditlogentryapiqueue-{Env}",
+				"partitioned": "true"
+			},
+			{	
+				"name":"payments-instalmentspendingbalancecheck-{Env}",
+				"partitioned": "true"
+			},
+			{
+				"name":"payments-instalmentspendingrefresh-{Env}",
+				"partitioned": "true"
+			}
+		]
+	},
+	"applicationInsights": [
+		{
+			"key": "apiai",
+			"location" : "syd",
+			"rgKey":"infra",
+			"namespacePrefix":"{Prefix}-api-{Env}-ai",
+			"properties": "\"{\\\"ApplicationId\\\":\\\"{Prefix}api-{Env}-appinsights\\\",\\\"Application_Type\\\":\\\"other\\\", \\\"Flow_Type\\\":\\\"Redfield\\\", \\\"Request_Source\\\":\\\"IbizaAIExtension\\\"}\"",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "false"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true"
+				}
+			]
+		},
+		{
+			"key": "webai",
+			"location" : "syd",
+			"rgKey":"infra",
+			"namespacePrefix":"{Prefix}-web-{Env}-ai",
+			"properties": "\"{\\\"ApplicationId\\\":\\\"{Prefix}web-{Env}-appinsights\\\",\\\"Application_Type\\\":\\\"other\\\", \\\"Flow_Type\\\":\\\"Redfield\\\", \\\"Request_Source\\\":\\\"IbizaAIExtension\\\"}\"",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "false"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true"
+				}
+			]
+		},
+		{
+			"key": "funcai",
+			"location" : "syd",
+			"rgKey":"infra",
+			"namespacePrefix":"{Prefix}-func-{Env}-ai",
+			"properties": "\"{\\\"ApplicationId\\\":\\\"{Prefix}-func-{Env}-appinsights\\\",\\\"Application_Type\\\":\\\"other\\\", \\\"Flow_Type\\\":\\\"Redfield\\\", \\\"Request_Source\\\":\\\"IbizaAIExtension\\\"}\"",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "true"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true"
+				}
+			]
+		}
+	],
+	"servicePlans": [
+		{
+			"key":"spapi",
+			"name": "{Prefix}-sp-api-{Env}-{LocationKey}",
+			"sku": "S1",
+			"isLinux": "true",
+			"numberOfWorkers": "2",
+			"locations" : "syd,mel",
+			"rgKey":"applinux",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "false"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true"
+				}
+			]
+		},
+		{
+			"key":"spweb",
+			"name": "{Prefix}-sp-web-{Env}-{LocationKey}",
+			"sku": "S1",
+			"isLinux": "true",
+			"numberOfWorkers": "2",
+			"locations" : "syd,mel",
+			"rgKey":"applinux",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "false"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true"
+				}
+			]
+		},
+		{
+			"key":"spfunc",
+			"name": "{Prefix}-sp-azf-{Env}-{LocationKey}",
+			"sku": "S1",
+			"isLinux": "false",
+			"locations":"syd",
+			"rgKey":"services",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "true"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true"
+				}
+			]
+		}
+	],
+	"trafficManagerList": [
+		{
+			"key":"tmapi",
+			"profileName":"{Prefix}-tm-api-{Env}",
+			"profileDNS":"{Prefix}-tm-api-{Env}",
+			"routingMethod":"Performance",
+			"ttl" : "30",
+			"protocol" : "HTTP",
+			"port" : "80",
+			"path" : "/",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "true"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true"
+				}
+			]
+		},
+		{
+			"key":"tmweb",
+			"profileName":"{Prefix}-tm-web-{Env}",
+			"profileDNS":"{Prefix}-tm-web-{Env}",
+			"routingMethod":"Performance",
+			"ttl" : "30",
+			"protocol" : "HTTP",
+			"port" : "80",
+			"path" : "/",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "true"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true"
+				}
+			]
+		}
+	],
+	"appservices": {
+		"certificates" : [
+			{
+				"type": "wildcard",
+				"vaultKey": "creditsimpledevops",
+				"name": "DevTestCertWCAU",
+				"secretName": "devtestcertwcauccd6ad2c-46a3-4390-9c91-d930130eaf12",
+				"pfxPath": ".\\asc-wc-au.pfx",
+				"pfxPasswordKey": "webPfxPasswordKeyWildcard",
+				"thumbprint": "4DCD76465DB36D1FD35DF675A8B42A994992C3DE",
+				"certLocation": "keyvault"
+			},
+			{
+				"type": "sqapiprod",
+				"vaultKey": "devopsprod",
+				"name": "PFX-Cert-API-Key",
+				"secretName": "",
+				"pfxPath": ".\\api.fittopay.com.au.pfx",
+				"pfxPasswordKey": "PFX-SQ-Cert-API-Key",
+				"thumbprint": "114F23628B74D6BAE01CA12005C25752EAE5B48A",
+				"certLocation": "local"
+			},
+			{
+				"type": "sqwebprod",
+				"vaultKey": "devopsprod",
+				"name": "PFX-Cert-Web-Key",
+				"secretName": "",
+				"pfxPath": ".\\www.fittopay.com.au.pfx",
+				"pfxPasswordKey": "PFX-SQ-Cert-Web-Key",
+				"thumbprint": "89EC44DD5233011B67EC7BFD8BA7B5381AA57679",
+				"certLocation": "local"
+			}
+		],
+		"appServiceList": [
+			{
+				"key": "api",
+				"name": "{Prefix}-api-{Env}-{LocationKey}",
+				"fqdn": "{Prefix}-api-{Env}.creditsimple.com.au",
+				"runtime": "DOTNETCORE|latest",
+				"tmKey": "tmapi",
+				"spKey": "spapi",
+				"rgKey": "applinux",
+				"locations": "syd,mel",
+				"adGroupKey": "application",
+				"certs": [
+					{
+						"env" : "devcert",
+						"certType": "wildcard"
+					},
+					{
+						"env" : "uat",
+						"certType": "wildcard"
+					},
+					{
+						"env" : "prod",
+						"certType": "sqapiprod"
+					}
+				],
+				"aiKey":"apiai",
+				"deploy" : [
+					{
+						"env": "dev",
+						"enabled": "false"
+					},
+					{
+						"env": "uat",
+						"enabled": "true"
+					},
+					{
+						"env": "prod",
+						"enabled": "true",
+						"fqdn": "api.fittopay.com.au"
+					}
+				]
+			},
+			{
+				"key": "web",
+				"name": "{Prefix}-web-{Env}-{LocationKey}",
+				"fqdn": "{Prefix}-web-{Env}.creditsimple.com.au",
+				"runtime": "DOTNETCORE|latest",
+				"tmKey": "tmweb",
+				"spKey": "spweb",
+				"rgKey": "applinux",
+				"locations": "syd,mel",
+				"adGroupKey": "application",
+				"certs": [
+					{
+						"env" : "devcert",
+						"certType": "wildcard"
+					},
+					{
+						"env" : "uat",
+						"certType": "wildcard"
+					},
+					{
+						"env" : "prod",
+						"certType": "sqwebprod"
+					}
+				],
+				"aiKey": "webai",
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "false"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true",
+						"fqdn": "www.fittopay.com.au"
+					}
+				]
+			}
+		],
+		"siteIpRestrictions" : [
+			{"ipAddress":"49.255.172.122/32"  ,"action":"Allow","tag":"Default","priority":200, "name":"RULE 2 - CS WIFI"},
+			{"ipAddress":"117.120.16.0/24"  ,"action":"Allow","tag":"Default","priority":300, "name":"RULE 3 - Illion"},
+			{"ipAddress":"117.120.18.0/24"  ,"action":"Allow","tag":"Default","priority":400, "name":"RULE 4 - Illion"},
+			{"ipAddress":"203.28.214.0/24"  ,"action":"Allow","tag":"Default","priority":500, "name":"RULE 5 - Illion"},
+			{"ipAddress":"203.28.215.0/24"  ,"action":"Allow","tag":"Default","priority":600, "name":"RULE 6 - Illion"},
+			{"ipAddress":"203.2.222.0/24"   ,"action":"Allow","tag":"Default","priority":700, "name":"RULE 7 - Illion"},
+			{"ipAddress":"40.126.239.0/24"  ,"action":"Allow","tag":"Default","priority":800, "name":"RULE 8 - AzureServices"},
+			{"ipAddress":"40.126.232.0/24"  ,"action":"Allow","tag":"Default","priority":900, "name":"RULE 9 - AzureServices"},
+			{"ipAddress":"40.126.225.0/24"  ,"action":"Allow","tag":"Default","priority":1000,"name":"RULE 10 - AzureServices"},
+			{"ipAddress":"52.237.0.0/16"    ,"action":"Allow","tag":"Default","priority":1100,"name":"RULE 11 - AzureServices"},
+			{"ipAddress":"13.73.0.0/16"     ,"action":"Allow","tag":"Default","priority":1200,"name":"RULE 12 - AzureServices"},
+			{"ipAddress":"52.187.0.0/16"    ,"action":"Allow","tag":"Default","priority":1300,"name":"RULE 13 - AzureServices"},
+			{"ipAddress":"13.72.0.0/16"     ,"action":"Allow","tag":"Default","priority":1400,"name":"RULE 14 - AzureServices"},
+			{"ipAddress":"40.71.11.0/16"    ,"action":"Allow","tag":"Default","priority":1500,"name":"RULE 15 - AzureServices"},
+			{"ipAddress":"40.85.166.0/16"   ,"action":"Allow","tag":"Default","priority":1600,"name":"RULE 16 - AzureServices"},
+			{"ipAddress":"168.62.166.0/16"  ,"action":"Allow","tag":"Default","priority":1700,"name":"RULE 17 - AzureServices"},
+			{"ipAddress":"137.135.126.0/16" ,"action":"Allow","tag":"Default","priority":1800,"name":"RULE 18 - AzureServices"},
+			{"ipAddress":"137.135.121.0/16" ,"action":"Allow","tag":"Default","priority":1900,"name":"RULE 19 - AzureServices"},
+			{"ipAddress":"137.135.118.0/16" ,"action":"Allow","tag":"Default","priority":2000,"name":"RULE 20 - AzureServices"},
+			{"ipAddress":"137.135.125.0/16" ,"action":"Allow","tag":"Default","priority":2100,"name":"RULE 21 - AzureServices"}
+		],
+		"managementIpRestrictions": [
+			{"ipAddress":"49.255.172.122/32","action":"Allow","tag":"Default","priority":100,"name":"CS WIFI"},
+			{"ipAddress":"117.120.16.0/24","action":"Allow","tag":"Default","priority":200,"name":"CS CORP A"},
+			{"ipAddress":"117.120.18.0/24","action":"Allow","tag":"Default","priority":300,"name":"CS CORP B"},
+			{"ipAddress":"49.195.147.0/24","action":"Allow","tag":"Default","priority":400,"name":"CS CORP C"},
+			{"ipAddress":"203.28.214.0/24"  ,"action":"Allow","tag":"Default","priority":500, "name":"CS CORP D"},
+			{"ipAddress":"203.28.215.0/24"  ,"action":"Allow","tag":"Default","priority":600, "name":"CS CORP E"},
+			{"ipAddress":"203.2.222.0/24"   ,"action":"Allow","tag":"Default","priority":700, "name":"CS CORP F"}
+		]
+	},
+	"vnets": {
+		"locations" : "syd,mel",
+		"rgKey":"infra",
+		"vnetPattern" : "vnet-{Prefix}-01-{Env}-{LocationKey}",
+		"subnetPattern" : "sn-{Prefix}-01-{Env}-{LocationKey}",
+		"nsgPattern" : "nsg-{Prefix}-01-{Env}-{LocationKey}",
+		"vnet" : [
+			{
+				"key" : "syd",
+				"type" : "gateway",
+				"cidr" : [
+					{
+						"env" : "dev",
+						"range" : "10.21.0.0/16"
+					},
+					{
+						"env" : "uat",
+						"range" : "10.23.0.0/16"
+					},
+					{
+						"env" : "prod",
+						"range" : "10.25.0.0/16"
+					}
+				],
+				"subnet" : {
+					"cidr" : [
+						{
+							"env" : "dev",
+							"range" : "10.21.0.0/24"
+						},
+						{
+							"env" : "uat",
+							"range" : "10.23.0.0/24"
+						},
+						{
+							"env" : "prod",
+							"range" : "10.25.0.0/24"
+						}
+					]
+				}
+			},
+			{
+				"key" : "mel",
+				"type" : "gateway",
+				"cidr" : [
+					{
+						"env" : "dev",
+						"range" : "10.22.0.0/16"
+					},
+					{
+						"env" : "uat",
+						"range" : "10.24.0.0/16"
+					},
+					{
+						"env" : "prod",
+						"range" : "10.26.0.0/16"
+					}
+				],
+				"subnet" : {
+					"cidr" : [
+						{
+							"env" : "dev",
+							"range" : "10.22.0.0/24"
+						},
+						{
+							"env" : "uat",
+							"range" : "10.24.0.0/24"
+						},
+						{
+							"env" : "prod",
+							"range" : "10.26.0.0/24"
+						}
+					]
+				}
+			}
+		],
+		"nsg" : {
+			"name": "nsg-{Prefix}-01-{Env}-{LocationKey}",
+			"internalAllowedRanges": "203.28.215.0/24,172.19.131.0/24,117.120.16.0/24,49.255.172.0/24,203.28.214.0/24",
+			"azureRanges": "13.70.72.0/24,40.126.227.28,40.126.238.0/24,40.126.245.0/24,40.126.236.0/24,40.126.247.0/24,104.210.0.0/16"
+		},
+		"deploy" : [
+			{
+				"env" : "dev",
+				"enabled" : "false"
+			},
+			{
+				"env" : "uat",
+				"enabled" : "true"
+			},
+			{
+				"env" : "prod",
+				"enabled" : "true"
+			}
+		]
+	},
+	"ipAddressList" : [
+		{
+			"key" : "gateway",
+			"locations" : "syd,mel",
+			"name" : "ip-{Prefix}-01-{Env}-{LocationKey}",
+			"rgKey":"infra",
+			"allocationMethod" : "Dynamic",
+			"deploy" : [
+				{
+					"env" : "dev",
+					"enabled" : "false"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true"
+				}
+			]
+		}
+	],
+	"gateway" : {
+		"locations": "mel,syd",
+		"rgKey":"infra",
+		"ipAddressKey":"gateway",
+		"vnet":"gateway",
+		"appServiceKey":"api,web",
+		"certificateKey": [
+			{ 
+				"env":"dev",
+				"appServiceKey": "web",
+				"certType": "wildcard",
+				"certName": "sqweb-com-au"
+			},
+			{ 
+				"env": "dev",
+				"appServiceKey":"api",
+				"certType": "wildcard",
+				"certName": "sqapi-com-au"
+			},
+			{ 
+				"env": "uat",
+				"appServiceKey": "web",
+				"certType": "wildcard",
+				"certName": "sqweb-com-au"
+			},
+			{ 
+				"env": "uat",
+				"appServiceKey":"api",
+				"certType": "wildcard",
+				"certName": "sqapi-com-au"
+			},
+			{ 
+				"env":"prod",
+				"appServiceKey": "web",
+				"certType": "sqwebprod",
+				"certName": "sqweb-com-au"
+			},
+			{ 
+				"env":"prod",
+				"appServiceKey":"api",
+				"certType": "sqapiprod",
+				"certName": "sqapi-com-au"
+			}
+		],
+		"skuName": "WAF_Medium",
+		"skuTier": "WAF",
+		"skuCapacity": "1",
+		"name" : "ag-{Prefix}-{Env}-{LocationKey}",
+		"mode":"Detection",
+		"ipConfigurationName" : "gwipconf-{Prefix}-01-{Env}-{LocationKey}",
+		"probeName": "ag-https-probe",
+		"routingRuleName": "https-rule-{Prefix}-{AppKey}",
+		"backendPoolName": "backendpool-{Prefix}-{AppKey}",
+		"backendHttpsSettingsName":"ag-backend-https-settings",
+		"listeners" : [
+			{
+				"type":"http",
+				"port":"80",
+				"name":"http-listener-{Prefix}-{AppKey}"
+			},
+			{
+				"type":"https",
+				"port":"80",
+				"name":"https-listener-{Prefix}-{AppKey}"
+			}
+		],
+		"redirectRule" : {
+			"fromlistener": "http",
+			"tolistener": "https",
+			"redirectType": "Permanent",
+			"redirectConfigurationName": "http-rdrct-config-{Prefix}-{AppKey}",
+			"requestRoutingRuleName": "http-rdrct-rule-{Prefix}-{AppKey}"
+		},
+		"policyName": "AppGwSslPolicy20170401S",
+		"policyType": "Predefined",
+		"logAnalytics" : {
+			"rgKey" : "infra",
+			"workspaceName": "law-{Prefix}-appgw-{Env}-{LocationKey}",
+			"sku": "Standard"
+		}, 	
+		"deploy" : [
+			{
+				"env" : "dev",
+				"enabled" : "false"
+			},
+			{
+				"env" : "uat",
+				"enabled" : "true"
+			},
+			{
+				"env" : "prod",
+				"enabled" : "true"
+			}
+		]
+	},
+	"secrets": {
+		"keyPrefix": "SQ",
+		"keyPattern": "{KeyPrefix}-{KeyName}-{EnvPrefix}",
+		"generated" : [
+			{	
+				"name":"JWTSecurityKey"
+			},
+			{	
+				"name":"MILTONGRAHAMAU-SERVICE-KEY"
+			},
+			{	
+				"name":"MILTONGRAHAMAU-SERVICE-SECRET"
+			}
+			
+		],
+		"fromStore" : [
+			{	 
+				"targetKeyName":"AdminIdentityDBPrimaryEndpoint", 
+				"sourceKeyName":"AdminIdentityDBPrimaryEndpoint{EnvPrefix}" 
+			},
+			{	 
+				"targetKeyName":"AdminIdentityDBReadOnlyEndpoint", 
+				"sourceKeyName":"AdminIdentityDBReadOnlyEndpoint{EnvPrefix}" 
+			},
+			{	 
+				"targetKeyName":"StoragePrimaryKey", 
+				"sourceKeyName":"appStoragePrimaryKey" 
+			},
+			{ 
+				"targetKeyName":"StorageSecondaryKey", 
+				"sourceKeyName":"appStorageSecondaryKey" 
+			},
+			{ 
+				"targetKeyName":"DBApplicationId", 
+				"sourceKeyName":"dbapplicationid{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"DBCredentialName", 
+				"sourceKeyName":"dbcredentialname{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"DBApplicationName", 
+				"sourceKeyName":"dbapplicationname{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"DBApplicationSecret", 
+				"sourceKeyName":"dbapplicationsecret{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"DBTenantId", 
+				"sourceKeyName":"dbtenantid{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"DTSFTPIp", 
+				"sourceKeyName":"DTSFTPIp{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"DTSFTPPassword", 
+				"sourceKeyName":"DTSFTPPassword{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"DTSFTPPort", 
+				"sourceKeyName":"DTSFTPPort{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"DTSFTPUserId", 
+				"sourceKeyName":"DTSFTPUserId{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"MG-PasswordKey", 
+				"sourceKeyName":"MG-PasswordKey{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"MG-ReconcilationPasswordKey", 
+				"sourceKeyName":"MG-ReconcilationPasswordKey{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"MG-UserNameKey", 
+				"sourceKeyName":"MG-UserNameKey{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"RedisAccountName", 
+				"sourceKeyName":"redisAccountName" 
+			},
+			{ 
+				"targetKeyName":"RedisPrimaryKey", 
+				"sourceKeyName":"redisPrimaryKey" 
+			},
+			{ 
+				"targetKeyName":"RedisSecondaryKey", 
+				"sourceKeyName":"redisSecondaryKey" 
+			},
+			{
+				"targetKeyName":"SendGridApiKey", 
+				"sourceKeyName":"SendGridPasswordKey{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"QueueConnectionString", 
+				"sourceKeyName":"serviceBusConnectionString{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"QueueNamespace", 
+				"sourceKeyName":"serviceBusNamespace{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"MILTONGRAHAMAU-StorageAccountConnection", 
+				"sourceKeyName":"StorageAccountConnectionString{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"SplitApiAccessToken", 
+				"sourceKeyName":"SplitApiAccessToken{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"ADMainDBPrimaryEndpoint", 
+				"sourceKeyName":"MainDBPrimaryEndpoint{EnvPrefix}" 
+			},
+			{ 
+				"targetKeyName":"ADMainDBReadOnlyEndpoint", 
+				"sourceKeyName":"MainDBReadOnlyEndpoint{EnvPrefix}" 
+			}
+		],
+		"deploy" : [
+			{
+				"env" : "dev",
+				"enabled" : "false",
+				"kvKey" : "devops"
+			},
+			{
+				"env" : "uat",
+				"enabled" : "true",
+				"kvKey" : "devops"
+			},
+			{
+				"env" : "prod",
+				"enabled" : "true",
+				"kvKey" : "devopsprod"
+			}
+		]
+	},
+	"functions": {
+		"vault" : [
+			{
+				"env" : "dev",
+				"key": "devops"
+			},
+			{
+				"env" : "uat",
+				"key": "devops"
+			},
+			{
+				"env" : "prod",
+				"key": "devopsprod"
+			}
+		],
+		"functionList" : [
+			{	
+				"name":"{Prefix}-func-{Env}-accountmanagement",
+				"key":"AccountManagement-AZF-KEY",	
+				"rgKey":"services",
+				"spKey":"spfunc",
+				"aiKey":"funcai",
+				"storageKey":"funcstorage",
+				"adGroupKey" : "application",
+				"kvKey" : "app",
+				"locations" : "syd",
+				"settings":[],
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			},
+			{	
+				"name":"{Prefix}-func-{Env}-core",
+				"key":"Core-AZF-KEY",	
+				"rgKey":"services",
+				"spKey":"spfunc",
+				"aiKey":"funcai",
+				"storageKey":"funcstorage",
+				"adGroupKey" : "application",
+				"kvKey" : "app",
+				"locations" : "syd",
+				"settings":[],
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			},
+			{	
+				"name":"{Prefix}-func-{Env}-debtrecord",
+				"key":"DebtRecord-AZF-KEY",	
+				"rgKey":"services",
+				"spKey":"spfunc",
+				"aiKey":"funcai",
+				"storageKey":"funcstorage",
+				"adGroupKey" : "application",
+				"kvKey" : "app",
+				"locations" : "syd",
+				"settings":[
+					{"name":"client-import-schedule","value":"0 0 21 * * MON-FRI"},
+					{"name":"client-transaction-schedule","value":"0 10 0 * * MON-FRI"},
+					{"name":"client-smsfile-schedule","value":"0 0 23 * * MON-FRI"},
+					{"name":"WEBSITE_TIME_ZONE","value":"AUS Eastern Standard Time"}
+					
+				],
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			},
+			{	
+				"name":"{Prefix}-func-{Env}-messagetracking",
+				"key":"MessageTracking-AZF-KEY",	
+				"rgKey":"services",
+				"spKey":"spfunc",
+				"aiKey":"funcai",
+				"storageKey":"funcstorage",
+				"adGroupKey" : "application",
+				"kvKey" : "app",
+				"locations" : "syd",
+				"settings":[
+					{"name":"MessageContainerEmailQueueName","value":"messagecontaineremailqueue-{Env}","type": "localized"},
+					{"name":"MessageContainerSMSQueueName","value":"messagecontainersmsqueue-{Env}","type": "localized"}
+				],
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			},
+			{	
+				"name":"{Prefix}-func-{Env}-messaging",
+				"key":"Messaging-AZF-KEY",	
+				"rgKey":"services",
+				"spKey":"spfunc",
+				"aiKey":"funcai",
+				"storageKey":"funcstorage",
+				"adGroupKey" : "application",
+				"kvKey" : "app",
+				"locations" : "syd",
+				"settings":[
+					{"name":"MessageContainerEmailQueueName","value":"messagecontaineremailqueue-{Env}","type": "localized"},
+					{"name":"MessageContainerSMSQueueName","value":"messagecontainersmsqueue-{Env}","type": "localized"}
+				],
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			},
+			{	
+				"name":"{Prefix}-func-{Env}-paymentgateway",
+				"key":"PaymentGateway-AZF-KEY",	
+				"rgKey":"services",
+				"spKey":"spfunc",
+				"aiKey":"funcai",
+				"storageKey":"funcstorage",
+				"adGroupKey" : "application",
+				"kvKey" : "app",
+				"locations" : "syd",
+				"settings":[
+					{"name":"RunProcessDueInstalments","value":"0 0 8 * * *"},
+					{"name":"PaymentsRefreshQueueName","value":"payments-instalmentspendingrefresh-{AppKey}","type": "localized"},
+					{"name":"PaymentsBalanceCheckQueueName","value":"payments-instalmentspendingbalancecheck-{AppKey}","type": "localized"},
+					{"name":"PaymentsRetryThreshold","value":"5"},
+					{"name":"PaymentsRetryDeferSecs","value":"180"},
+					{"name":"PaymentsBalanceCheckDeferSecs","value":"120"},
+					{"name":"WEBSITE_TIME_ZONE","value":"AUS Eastern Standard Time"}
+				],
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			},
+			{	
+				"name":"{Prefix}-func-{Env}-withdrawnotification",
+				"key":"WithdrawNotification-AZF-KEY",	
+				"rgKey":"services",
+				"spKey":"spfunc",
+				"aiKey":"funcai",
+				"storageKey":"funcstorage",
+				"adGroupKey" : "application",
+				"kvKey" : "app",
+				"locations" : "syd",
+				"settings":[
+					{"name":"RunNotifyWithdrawInterval","value":"0 0 9 * * SAT"},
+					{"name":"RunProcessResponseFileInterval","value":"*/30 * * * * *"},
+					{"name":"RunProcessNonResponseFile","value":"0 0 9 * * SAT"},
+					{"name":"RunProcessRejectsFile","value":"0 0 9 * * SAT"},
+					{"name":"RunMissingResponseFile","value":"0 0 9 * * SAT"}
+				],
+				"deploy" : [
+					{
+						"env" : "dev",
+						"enabled" : "true"
+					},
+					{
+						"env" : "uat",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			}
+		],
+		"defaultSettings" : [
+			{ "name":"ApplicationName", "value": "SQUAREAWAY" }, 
+			{ "name":"ApplicationGroup", "value": "SQUAREAWAY"}, 
+			{ "name":"AuditLogEntryAPIQueueName","value":"auditlogentryapiqueue-{AppKey}","type": "localized"},
+			{ "name":"CacheEnvironment", "value": "{Env}","type": "localized"}, 
+			{ "name":"CacheName", "value": "SQUAREAWAY"}, 
+			{ "name":"DEBUGMODE", "value": "Y"}, 
+			{ "name":"Environment", "value": "{AppKey}","type": "localized"},
+			{ "name":"KeyVaultUrl", "value": "https://{LongPrefix}-app-{Env}.vault.azure.net/","type": "localized"}, 
+			{ "name":"KeyVaultPrefix", "value": "{Prefix}"}, 
+			{ "name":"KeyVaultEnabled", "value": "true"}, 
+			{ "name":"Layer", "value": "AZF"}, 
+			{ 
+				"name":"LogEmailFrom", 
+				"value": "noreply@fittopay.com.au"
+			},
+			{"name":"LogEntryAPIQueueName","value":"logentryapiqueue-{AppKey}","type": "localized"},
+			{ 	
+				"name":"LogEmailRecipients", 
+				"list": [
+					{
+						"env" : "dev",
+						"value" : "qa@creditsimple.co.nz"
+					},
+					{
+						"env" : "uat",
+						"value" : "qa@creditsimple.co.nz"
+					},
+					{
+						"env" : "prod",
+						"value" : "it@creditsimple.co.nz"
+					}
+				],
+				"type": "specific"
+			},
+			{ "name":"LogErrors", "value": "true"},
+			{ "name":"LogWarnings", "value": "true"},
+			{ "name":"LogMessages", "value": "true"},
+			{ "name":"ManagedServiceIdentityEnabled", "value": "true"}, 
+			{ "name":"ManagedServiceIdentityEnabledForServiceBus", "value": "true"}, 
+			{ "name":"MILTONGRAHAMAU-StorageAccountConnection", "value": "StorageAccountConnectionString{Env}", "type": "kv"},
+			{ "name":"Mode", "value": "Cloud"}, 
+			{ "name":"SBConnection", "value": "ServiceBusConnectionString", "type": "kv"}, 
+			{ 	
+				"name":"TestEmailRecipients", 
+				"list": [
+					{
+						"env" : "dev",
+						"value" : "qa@creditsimple.co.nz"
+					},
+					{
+						"env" : "uat",
+						"value" : "qa@creditsimple.co.nz"
+					},
+					{
+						"env" : "prod",
+						"value" : ""
+					}
+				],
+				"type": "specific"
+			},
+			{ "name":"APPINSIGHTS_INSTRUMENTATIONKEY", "type":"retain"},
+			{ "name":"AzureWebJobsDashboard", "type":"retain"},
+			{ "name":"AzureWebJobsStorage", "type":"retain"},
+			{ "name":"FUNCTIONS_EXTENSION_VERSION", "value": "~3"},
+			{ "name":"WEBSITE_NODE_DEFAULT_VERSION", "type":"retain"}
+		]
+	}
+}

@@ -1,0 +1,42 @@
+{
+	"prefix" : "ma",
+	"longPrefix" : "myapp",
+	"defaultKeyPattern": "{prefix}-{keyName}-{environment}",
+	"locations" : [
+		{
+			"key" : "syd",
+			"name" : "Australia East",
+			"cloudKey" : "australiaeast",
+			"isPrimary" : "true"
+		},
+		{
+			"key" : "mel",
+			"name" : "Australia SouthEast",
+			"cloudKey" : "australiasoutheast",
+			"isPrimary" : "false"
+		}
+	],
+	"environments" : [
+		{
+			"key" : "local",
+			"name" : "local"
+		},
+		{
+			"key" : "dev",
+			"name" : "dev"
+		},
+		{
+			"key" : "uat",
+			"name" : "uat"
+		},
+		{
+			"key" : "devtest",
+			"name" : "devtest",
+			"isShared" : "true"
+		},
+		{
+			"type" : "prod",
+			"name" : "prod"
+		}
+	]
+}
