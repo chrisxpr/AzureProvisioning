@@ -13,4 +13,4 @@ This project aims to provide some direction on how to build out your infrastruct
 
 This project will progress through deploying each of the three stages listed above in a consistent and repeatable manner through the use of rich suite of azure cli commands. 
 
-The first section to tackle will be the bootstrap resources
+[The first section to tackle will be the bootstrap resources](https://github.com/chrisxpr/AzureProvisioning/tree/master/1-bootstrap-resources)
