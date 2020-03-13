@@ -66,6 +66,10 @@ function Add-ADGroups {
 		[string]$environmentName
 	)
 	
+	Write-Host ""
+	Write-Host "[Add-ADGroups]"
+	Write-Host ""
+	
 	$settings.ad.groups | foreach {
 		$currentADGroup = $_
 		$currentADGroupType = $currentADGroup[0].type
@@ -113,6 +117,7 @@ function Get-ADGroup {
 	if ($adGroupName -ne $null)
 	{
 		$adg = az ad group show --group $adGroupName 
+		Reset-UI
 		return ($adg | ConvertFrom-Json)
 	}
 	else {
@@ -135,12 +140,14 @@ function Add-ADGroup {
 	$adGroupName = $adGroup[0].name
 	$groupName = Format-ResourceName -Resource $adGroupName -Conventions $conventions -EnvironmentName $environmentName
 	
+	Write-Host ""
 	Write-Host "[Add-ADGroup] Creating AD Group: $groupName"
 	
 	if ($groupName -ne $null)
 	{
 		$adgId = az ad group show --group $groupName --query id --output TSV 
-		
+		Reset-UI
+
 		if ($adgId -eq $null) { 
 			az ad group create --display-name $groupName --mail-nickname $groupName
 		}
@@ -168,9 +175,7 @@ function Get-ADGroupName {
 	Reset-UI
 	
 	Write-Host ""
-	Write-Host "----------------------------------------------"
-	Write-Host "Get-ADGroupName"
-	Write-Host "----------------------------------------------"
+	Write-Host "[Get-ADGroupName]"
 	Write-Host "Retrieving AD Group from config.ad.groups for type:$type"
 	
 	$adGroup = $settings.ad.groups | where { $_.type -eq $type }  
@@ -197,9 +202,7 @@ function Get-ResourceGroup {
 	Reset-UI
 	
 	Write-Host ""
-	Write-Host "----------------------------------------------"
-	Write-Host "Get-ResourceGroup"
-	Write-Host "----------------------------------------------"
+	Write-Host "[Get-ResourceGroup]"
 	$resourceGroupId = $null
 	
 	$resourceGroup = $settings.resourceGroups | where { $_.type -eq $type }  
@@ -212,11 +215,10 @@ function Get-ResourceGroup {
 	$locationName = $location.Name
 	
 	$rg = az group show --name $resourceGroupName
+	Reset-UI
 	
 	if ($rg -eq $null)
 	{
-		Reset-UI
-		
 		Write-Host "Resource Group not found - proceeding to create"
 		$rg = az group create --name $resourceGroupName --location $locationName
 		
@@ -256,6 +258,10 @@ function Add-ResourceGroups {
 		[Parameter(Mandatory=$true,HelpMessage="EnvironmentName")]
 		[string]$environmentName
 	)
+	
+	Write-Host ""
+	Write-Host "[Add-ResourceGroups]"
+	Write-Host ""
 	
 	$settings.resourceGroups | foreach {
 		$currentGroup = $_
@@ -318,6 +324,10 @@ function Add-LogAnalyticsWorkspaces {
 			[Parameter(Mandatory=$true,HelpMessage="EnvironmentName")]
 			[string]$environmentName
 	)
+
+	Write-Host ""
+	Write-Host "[Add-LogAnalyticsWorkspaces]"
+	Write-Host ""
 	
 	$settings.logAnalytics | foreach {
 		$currentWorkspace = $_
@@ -362,20 +372,20 @@ function Add-LogAnalyticsWorkspace {
 	}
 	
 	$logAnalyticsWorkspaceName = Format-ResourceName -Resource $workspace.workspaceName -EnvironmentName $environmentName -Conventions $conventions -LocationKey $workspace.location
-	Write-Host "logAnalyticsWorkspaceName: $logAnalyticsWorkspaceName"
+	Write-Host " - logAnalyticsWorkspaceName: $logAnalyticsWorkspaceName"
 	
 	$logAnalyticsSku = $workspace.sku
 	$location = Get-LocationByKey -Key $workspace.location -Conventions $conventions
 	$logAnalyticsLocation = $location.cloudKey
 	$logAnalyticsRgKey = $workspace.rgKey
 	
-	Write-Host "logAnalyticsSku: $logAnalyticsSku"
-	Write-Host "logAnalyticsLocation: $logAnalyticsLocation"
-	Write-Host "logAnalyticsRgKey: $logAnalyticsRgKey"
+	Write-Host " - logAnalyticsSku: $logAnalyticsSku"
+	Write-Host " - logAnalyticsLocation: $logAnalyticsLocation"
+	Write-Host " - logAnalyticsRgKey: $logAnalyticsRgKey"
 	
 	$resourceGroupName = Get-ResourceGroupName -Type $logAnalyticsRgKey -Settings $settings -Conventions $conventions -EnvironmentName $environmentName
 	
-	Write-Host "Display law resource for -n $logAnalyticsWorkspaceName -g $resourceGroupName"
+	Write-Host "Retrieve law resource: $logAnalyticsWorkspaceName"
 	$laWorkspace = (az resource show -g $resourceGroupName -n $logAnalyticsWorkspaceName --resource-type 'Microsoft.OperationalInsights/workspaces') | ConvertFrom-Json
 
 	if ($laWorkspace -eq $null)
@@ -407,8 +417,8 @@ function Get-LogAnalyticsWorkspace {
 	$logAnalyticsWorkspaceName = Format-ResourceName -Resource $workspace.workspaceName -EnvironmentName $environmentName -Conventions $conventions -LocationKey $workspace.location
 	$resourceGroupName = Get-ResourceGroupName -Type $workspace.rgKey -Settings $settings -Conventions $conventions -EnvironmentName $environmentName
 	
-	Write-Host "logAnalyticsWorkspaceName: $logAnalyticsWorkspaceName"
-	Write-Host "resourceGroupName: $resourceGroupName"
+	Write-Host " - logAnalyticsWorkspaceName: $logAnalyticsWorkspaceName"
+	Write-Host " - resourceGroupName: $resourceGroupName"
 	
 	$laWorkspace = (az resource show -g $resourceGroupName -n $logAnalyticsWorkspaceName --resource-type 'Microsoft.OperationalInsights/workspaces') | ConvertFrom-Json
 
@@ -455,11 +465,10 @@ function Add-KeyVaults {
 			$resourceGroupName = Get-ResourceGroupName -Type $keyVault.rgKey -Settings $settings -conventions $conventions -EnvironmentName $environmentName
 			
 			Write-Host ""
-			Write-Host "key vault settings"
-			Write-Host "---------------------"
-			Write-Host "keyVaultName:" $keyVaultName
-			Write-Host "resourceGroupName:" $resourceGroupName
-				
+			Write-Host " - keyVaultName:" $keyVaultName
+			Write-Host " - resourceGroupName:" $resourceGroupName
+			Write-Host ""
+					
 			$kv = (az keyvault show --name $keyVaultName --resource-group $resourceGroupName) | ConvertFrom-Json
 			
 			if ($kv -ne $null)
@@ -483,10 +492,11 @@ function Add-KeyVaults {
 		
 				$diagnosticName = $keyVault.diagnosticName
 				$workspaceId = $workspace.id
-				Write-Host "Workspace ID: $workspaceId"
+				Write-Host " - Workspace ID: $workspaceId"
 				$keyVaultResourceId = $kv.id
-				Write-Host "KV Resource ID: $keyVaultResourceId"
+				Write-Host " - KV Resource ID: $keyVaultResourceId"
 				
+				Write-Host ""
 				Write-Host "Creating monitor settings $diagnosticName"
 				
 				az monitor diagnostic-settings create --name $diagnosticName `
@@ -497,9 +507,6 @@ function Add-KeyVaults {
 		
 			}			
 			
-			Write-Host ""
-			Write-Host "end key vault creation"
-			Write-Host "---------------------"
 			Write-Host ""
 		}
 		else
@@ -568,6 +575,7 @@ function Add-KeyVault {
 		}
 		else
 		{
+			Write-Host ""
 			Write-Host "Adding key vault permissions for admin role"
 			$roleList = $adminRoleGroups.split(",")
 			$roleList | foreach {

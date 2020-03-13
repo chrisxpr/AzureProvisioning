@@ -14,20 +14,6 @@
 						"enabled" : "true"
 					}
 				]
-			},
-			{
-				"type":"developers",
-				"name":"{prefix}developers",
-				"deploy" : [
-					{
-						"env" : "devtest",
-						"enabled" : "true"
-					},
-					{
-						"env" : "prod",
-						"enabled" : "false"
-					}
-				]
 			}
 		]
 	},
@@ -41,11 +27,6 @@
 					"env" : "devtest",
 					"enabled" : "true",
 					"contributors" : "devops"
-				},
-				{
-					"env" : "prod",
-					"enabled" : "false",
-					"contributors" : "devops"
 				}
 			]
 		},
@@ -54,11 +35,6 @@
 			"name" : "{prefix}-prod-shared",
 			"location": "syd",
 			"deploy" : [
-				{
-					"env" : "devtest",
-					"enabled" : "false",
-					"contributors" : "devops"
-				},
 				{
 					"env" : "prod",
 					"enabled" : "true",
@@ -80,11 +56,6 @@
 						"env" : "devtest",
 						"enabled" : "true",
 						"contributors" : "devops"
-					},
-					{
-						"env" : "prod",
-						"enabled" : "false",
-						"contributors" : "devops"
 					}
 				]
 		},
@@ -96,11 +67,6 @@
 			"metrics" : "AllMetrics",
 			"location": "syd",
 			"deploy" : [
-					{
-						"env" : "devtest",
-						"enabled" : "false",
-						"contributors" : "devops"
-					},
 					{
 						"env" : "prod",
 						"enabled" : "true",
@@ -134,8 +100,8 @@
 				"diagnosticName" : "kv-diag",
 				"deploy" : [
 					{
-						"env" : "devtest",
-						"enabled" : "false",
+						"env" : "prod",
+						"enabled" : "true",
 						"defaultRoleGroups" : "",
 						"adminRoleGroups" : "devops"
 					}
