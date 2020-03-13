@@ -194,15 +194,16 @@ And that’s it for the bootstrap resources not very exciting yet but gives a bi
 # Deploying the bootstrap resources
 
 Assumptions:
-az cli installed  --> link
-The AzureProvision module is installed.  --> link
+* [azure cli tools are installed](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+* [The AzureBootstrap module is already installed.](https://github.com/chrisxpr/AzureProvisioning/tree/master/module)
 
-To run
-* 1 Update the conventions.json file with your preferred prefixes and location etc
-* 2 Open a powershell commmand prompt
-* 3  run az login to login to the desired azure subscription
-* 4 Run the file 1-create-bootstrap-resources.ps1  specifiying the environment name devtest or prod
-* 5 Check the output for completion.
+To run and provision the bootstrap resources
+
+* 1 Update the conventions.json file with your preferred prefixes and locations etc
+* 2 Open a powershell command prompt
+* 3 run az login to login to the desired azure subscription
+* 4 Run the file 1-create-bootstrap-resources.ps1 specifiying the environment name devtest or prod
+* 5 Check the output for completion
 * 6 Navigate to the azure portal to check resource creation
 
 And we are now done with the bootstrap resources.
