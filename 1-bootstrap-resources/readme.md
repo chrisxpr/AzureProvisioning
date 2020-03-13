@@ -201,8 +201,9 @@ What will be deployed ?
 
 Upon completion of running the provisioning script detailed below the following items will be created
 
-![alt text][logo]
-[logo]: https://github.com/chrisxpr/AzureProvisioning/edit/master/1-bootstrap-resources/img/BootstrapDependancy.png "Bootstrap Resources"
+![alt text][bootimg]
+
+[bootimg]:https://github.com/chrisxpr/AzureProvisioning/edit/master/1-bootstrap-resources/img/BootstrapDependancy.png "Bootstrap Resources"
 
 To run and provision the bootstrap resources
 
