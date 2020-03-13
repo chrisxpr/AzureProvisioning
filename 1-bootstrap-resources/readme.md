@@ -203,7 +203,7 @@ Upon completion of running the provisioning script detailed below the following 
 
 ![alt text][bootimg]
 
-[bootimg]:https://github.com/chrisxpr/AzureProvisioning/edit/master/1-bootstrap-resources/img/BootstrapDependancy.png "Bootstrap Resources"
+[bootimg]:https://github.com/chrisxpr/AzureProvisioning/blob/master/1-bootstrap-resources/img/BootstrapDependancy.png?raw=true "Bootstrap Resources"
 
 To run and provision the bootstrap resources
 
