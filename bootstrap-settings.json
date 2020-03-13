@@ -7,13 +7,11 @@
 				"deploy" : [
 					{
 						"env" : "devtest",
-						"enabled" : "true",
-						"contributors" : "devops"
+						"enabled" : "true"
 					},
 					{
 						"env" : "prod",
-						"enabled" : "true",
-						"contributors" : "devops"
+						"enabled" : "true"
 					}
 				]
 			},
@@ -23,13 +21,11 @@
 				"deploy" : [
 					{
 						"env" : "devtest",
-						"enabled" : "true",
-						"contributors" : "devops"
+						"enabled" : "true"
 					},
 					{
 						"env" : "prod",
-						"enabled" : "false",
-						"contributors" : "devops"
+						"enabled" : "false"
 					}
 				]
 			}
