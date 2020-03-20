@@ -51,6 +51,7 @@
 			"rgKey" : "devtest-shared",
 			"metrics" : "AllMetrics",
 			"location": "syd",
+			"isShared" : "true",
 			"deploy" : [
 					{
 						"env" : "devtest",
@@ -66,6 +67,7 @@
 			"rgKey" : "prod-shared",
 			"metrics" : "AllMetrics",
 			"location": "syd",
+			"isShared" : "true",
 			"deploy" : [
 					{
 						"env" : "prod",

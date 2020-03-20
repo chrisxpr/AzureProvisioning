@@ -1,0 +1,2 @@
+Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : SQL Server Network Interfaces: Error reading adalsql.dll path from registry. Verify that Active Directory Authentication Library for SQL Server is properly installed. For details, please refer to http://go.microsoft.com/fwlink/?LinkID=513072 [2]. .
+Sqlcmd: Error: Microsoft ODBC Driver 17 for SQL Server : Client unable to establish connection.

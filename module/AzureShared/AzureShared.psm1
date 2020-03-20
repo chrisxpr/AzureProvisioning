@@ -56,42 +56,6 @@ function Get-LocationByKey {
 	return $location[0]
 }
 
-function Get-EnvironmentByKey {
-	Param( 
-		[Parameter(Mandatory=$true,HelpMessage="Key")]
-		[string]$key,
-		[Parameter(Mandatory=$true,HelpMessage="Conventions")]
-		[psobject]$conventions
-	)
-	
-	Reset-UI
-
-	$env = $conventions.environments | where { $_.key -eq $key }
-	return $env[0]
-}
-
-function Get-SharedEnvironmentName {
-	Param( 
-		[Parameter(Mandatory=$true,HelpMessage="environmentName")]
-		[string]$environmentName,
-		[Parameter(Mandatory=$true,HelpMessage="Conventions")]
-		[psobject]$conventions
-	)
-	
-	Reset-UI
-
-	$sharedEnvironmentName = $environmentName
-	
-	$env = Get-EnvironmentByKey -Key $environmentName -Conventions $conventions	
-	if ($env -ne $null -and $env.sharedKey -ne $null) {
-		$sharedEnvironmentName = $env.sharedKey
-	}
-	
-	Write-Host "Overriding the environemt key from:$environmentName to: $sharedEnvironmentName"
-	
-	return $sharedEnvironmentName
-}
-
 function Add-ADGroups {
 	Param( 
 		[Parameter(Mandatory=$true,HelpMessage="Settings")]
@@ -215,19 +179,13 @@ function Get-ADGroupName {
 	Write-Host "Retrieving AD Group from config.ad.groups for type:$type"
 	
 	$adGroup = $settings.ad.groups | where { $_.type -eq $type }  
-	
-	if ($adGroup -eq $null -or $adGroup[0] -eq $null) {
-		Write-Host "Unable to locate ad group:$type - please check config and try again"
-		return
-	}
-	
 	$adGroupName = $adGroup[0].name
 	$adGroupName = Format-ResourceName -Resource $adGroupName -Conventions $conventions -EnvironmentName $environmentName
 	
 	return $adGroupName
 }
 
-function Add-ResourceGroup {
+function Get-ResourceGroup {
 	Param( 
 		[Parameter(Mandatory=$true,HelpMessage="Type")]
 		[string]$type,
@@ -320,7 +278,7 @@ function Add-ResourceGroups {
 			$locationList = $currentGroup.location.split(",")
 			$locationList | foreach {
 				$locationKey = $_
-				Add-ResourceGroup -Type $currentGroup.type -Settings $settings -Conventions $conventions -EnvironmentName $environmentName -LocationKey $locationKey
+				Get-ResourceGroup -Type $currentGroup.type -Settings $settings -Conventions $conventions -EnvironmentName $environmentName -LocationKey $locationKey
 			}
 		}
 		else
@@ -350,15 +308,9 @@ function Get-ResourceGroupName {
 	
 	$resourceGroup = $settings.resourceGroups | where { $_.type -eq $type }  
 	$resourceGroupTemplate = $resourceGroup.name
-	$isShared = $resourceGroup.isShared
 	
-	$sharedEnvironmentName = $environmentName
-	
-	if ($isSharedResourceGroup -ne $null -and $isSharedResourceGroup -eq $true) {
-		$sharedEnvironmentName = Get-SharedEnvironmentName -EnvironmentName $environmentName -Conventions $conventions
-	}
-	
-	$resourceGroupName = Format-ResourceName $resourceGroupTemplate -EnvironmentName $sharedEnvironmentName -Conventions $conventions -LocationKey $locationKey
+	Write-Host "[Get-ResourceGroupName] resourceGroupTemplate: $resourceGroupTemplate"
+	$resourceGroupName = Format-ResourceName $resourceGroupTemplate -EnvironmentName $environmentName -Conventions $conventions -LocationKey $locationKey
 	Write-Host "[Get-ResourceGroupName] Resource Group Name: $resourceGroupName"
 	return $resourceGroupName
 }
@@ -419,15 +371,7 @@ function Add-LogAnalyticsWorkspace {
 		return $false
 	}
 	
-	$isShared = $workspace.isShared
-	
-	$sharedEnvironmentName = $environmentName
-	
-	if ($isShared -ne $null -and $isShared -eq $true) {
-		$sharedEnvironmentName = Get-SharedEnvironmentName -EnvironmentName $environmentName -Conventions $conventions
-	}
-	
-	$logAnalyticsWorkspaceName = Format-ResourceName -Resource $workspace.workspaceName -EnvironmentName $sharedEnvironmentName -Conventions $conventions -LocationKey $workspace.location
+	$logAnalyticsWorkspaceName = Format-ResourceName -Resource $workspace.workspaceName -EnvironmentName $environmentName -Conventions $conventions -LocationKey $workspace.location
 	Write-Host " - logAnalyticsWorkspaceName: $logAnalyticsWorkspaceName"
 	
 	$logAnalyticsSku = $workspace.sku
@@ -470,16 +414,7 @@ function Get-LogAnalyticsWorkspace {
 
 	$workspace = $settings.logAnalytics | where { $_.type -eq $type }  
 
-	$isShared = $workspace.isShared
-	
-	$sharedEnvironmentName = $environmentName
-	
-	if ($isShared -ne $null -and $isShared -eq $true) {
-		$sharedEnvironmentName = Get-SharedEnvironmentName -EnvironmentName $environmentName -Conventions $conventions
-		Write-Host "Overriding the environemt key to: $sharedEnvironmentName"
-	}
-	
-	$logAnalyticsWorkspaceName = Format-ResourceName -Resource $workspace.workspaceName -EnvironmentName $sharedEnvironmentName -Conventions $conventions -LocationKey $workspace.location
+	$logAnalyticsWorkspaceName = Format-ResourceName -Resource $workspace.workspaceName -EnvironmentName $environmentName -Conventions $conventions -LocationKey $workspace.location
 	$resourceGroupName = Get-ResourceGroupName -Type $workspace.rgKey -Settings $settings -Conventions $conventions -EnvironmentName $environmentName
 	
 	Write-Host " - logAnalyticsWorkspaceName: $logAnalyticsWorkspaceName"
@@ -525,8 +460,6 @@ function Add-KeyVaults {
 		
 		$keyVaultName = Format-ResourceName $keyVault.name -EnvironmentName $environmentName -Conventions $conventions
 		
-		Reset-UI
-		
 		if ($deployEnabled -eq $true)
 		{
 			$resourceGroupName = Get-ResourceGroupName -Type $keyVault.rgKey -Settings $settings -conventions $conventions -EnvironmentName $environmentName
@@ -537,7 +470,6 @@ function Add-KeyVaults {
 			Write-Host ""
 					
 			$kv = (az keyvault show --name $keyVaultName --resource-group $resourceGroupName) | ConvertFrom-Json
-			Reset-UI
 			
 			if ($kv -ne $null)
 			{
@@ -555,7 +487,7 @@ function Add-KeyVaults {
 			}
 			
 			$workspace = Get-LogAnalyticsWorkspace -type $keyVault.workspaceType -settings $settings -conventions $conventions -environmentName $environmentName
-			Reset-UI
+			
 			if ($workspace -ne $null) {
 		
 				$diagnosticName = $keyVault.diagnosticName

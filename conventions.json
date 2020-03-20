@@ -19,15 +19,18 @@
 	"environments" : [
 		{
 			"key" : "local",
-			"name" : "local"
+			"name" : "local",
+			"sharedKey" : "devtest"
 		},
 		{
 			"key" : "dev",
-			"name" : "dev"
+			"name" : "dev",
+			"sharedKey" : "devtest"
 		},
 		{
 			"key" : "uat",
-			"name" : "uat"
+			"name" : "uat",
+			"sharedKey" : "devtest"
 		},
 		{
 			"key" : "devtest",
@@ -36,7 +39,16 @@
 		},
 		{
 			"type" : "prod",
-			"name" : "prod"
+			"name" : "prod",
+			"sharedKey" : "prod"
+		}
+	],
+	"ipAccess" : [
+		{
+			"type" : "dbaccess",
+			"ipRangeStart" : "1.2.3.4",
+			"ipRangeEnd" : "1.2.3.4",
+			"ipRangeEnabled" : "false"
 		}
 	]
 }

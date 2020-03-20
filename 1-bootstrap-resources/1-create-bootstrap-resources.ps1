@@ -60,7 +60,6 @@ if ($outcome -eq $false)
 {
 	Write-Host "[Add-ResourceGroups]Quitting process"
 	return $false
-	
 }
 Reset-UI
 
@@ -69,7 +68,7 @@ $outcome = Add-LogAnalyticsWorkspaces -Settings $settings -Conventions $conventi
 
 if ($outcome -eq $false)
 {
-	Write-Host "[Add-KeyVaults]Quitting process"
+	Write-Host "[Add-LogAnalyticsWorkspaces]Quitting process"
 	return $false
 }
 Reset-UI

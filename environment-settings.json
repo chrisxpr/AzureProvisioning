@@ -1,0 +1,126 @@
+{
+	"ad": {
+		"applications": [
+			{
+				"type": "platformdbaccess",
+				"applicationName": "{prefix}platformdb{environment}",
+				"identifierUrl": "{prefix}{environment}.{LongPrefix}.com",
+				"keys" : {
+					"applicationIdKey":"PlatformDBApplicationId{environment}",
+					"applicationNameKey":"PlatformDBApplicationName{environment}",
+					"applicationSecretKey":"PlatformDBApplicationSecret{environment}",
+					"tenantIdKey":"PlatformDBTenantId{environment}"
+				},
+				"deploy" : [
+					{
+						"env": "local",
+						"enabled": "true",
+						"kvKey": "app"
+					},
+					{
+						"env": "dev",
+						"enabled": "false",
+						"kvKey": "app"
+					},
+					{
+						"env": "uat",
+						"enabled": "true",
+						"kvKey": "app"
+					},
+					{
+						"env": "prod",
+						"enabled": "true",
+						"kvKey": "app"
+					}
+				]
+			}
+		]
+	},
+	"resourceGroups": [
+		{
+			"type" : "infra",
+			"name" : "{prefix}-{environment}-infra",
+			"location": "syd",
+			"isShared" : "true",
+			"deploy" : [
+				{
+					"env" : "local",
+					"enabled" : "true",
+					"contributors" : "devops,developers"
+				},
+				{
+					"env" : "dev",
+					"enabled" : "true",
+					"contributors" : "devops"
+				}
+			]
+		}
+	],
+	"databases": [
+		{
+			"type": "platformdb",
+			"name" : "{longPrefix}platformdb{environment}",
+			"rgKey" : "database",
+			"location" : "syd",
+			"server" : "platformdbserver",
+			"serviceAccountType" : "platformdbaccess",
+			"developerGroupType" : "developers",
+			"deploy" : [
+				{
+					"env" : "local",
+					"enabled" : "true",
+					"defaultDbSize":"S1",
+					"accessScript" : "/templates/DB-AccountSetup-DevTest.sql",
+					"allowDeveloperGroup" : "true"
+					
+				},
+				{
+					"env" : "dev",
+					"enabled" : "true",
+					"defaultDbSize":"S1",
+					"accessScript" : "/templates/DB-AccountSetup-DevTest.sql",
+					"allowDeveloperGroup" : "true"
+				},
+				{
+					"env" : "uat",
+					"enabled" : "true",
+					"defaultDbSize":"S1",
+					"accessScript" : "/templates/DB-AccountSetup-Prod.sql"
+					
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true",
+					"defaultDbSize":"S1",
+					"accessScript" : "/templates/DB-AccountSetup-Prod.sql"
+				}
+			]
+		}
+	],
+	"keyvaults" : {
+		"list" : [
+			{
+				"type"  : "app",
+				"name"  : "{longPrefix}-app-{environment}",
+				"rgKey" : "infra",
+				"workspaceType" : "devtest-audit",
+				"diagnosticName" : "kv-diag",
+				"deploy" : [
+					{
+						"env" : "local",
+						"enabled" : "true",
+						"defaultRoleGroups" : "developers",
+						"adminRoleGroups" : "devops"
+					},
+					{
+						"env" : "dev",
+						"enabled" : "true",
+						"defaultRoleGroups" : "developers",
+						"adminRoleGroups" : "devops"
+					}
+				]
+			}
+		]
+	}
+	
+}

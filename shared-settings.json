@@ -1,0 +1,88 @@
+{
+	"ad": {
+		"groups" : [
+			{
+				"type":"developers",
+				"name":"{prefix}Developers",
+				"deploy" : [
+					{
+						"env" : "devtest",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "false"
+					}
+				]
+			},
+			{
+				"type":"services",
+				"name":"{prefix}Services",
+				"deploy" : [
+					{
+						"env" : "devtest",
+						"enabled" : "true"
+					},
+					{
+						"env" : "prod",
+						"enabled" : "true"
+					}
+				]
+			}
+		]
+	},
+	"resourceGroups": [
+		{
+			"type" : "database",
+			"name" : "{prefix}-{environment}-database",
+			"location": "syd",
+			"isShared" : "true",
+			"deploy" : [
+				{
+					"env" : "devtest",
+					"enabled" : "true",
+					"contributors" : "devops"
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true",
+					"contributors" : "devops"
+				}
+			]
+		}
+	],
+	"databaseServers": [
+		{
+			"type" : "platformdbserver",
+			"serverName" : "{longPrefix}-db-{environment}-{locationKey}",
+			"sqlAdminLoginSecretKeyName" : "sqladminloginplatformdb{LocationKey}",
+			"sqlAdminPasswordSecretKeyName" : "sqladminpasswordplatformdb{LocationKey}",
+			"defaultFWRuleName" : "Default-Access",
+			"offering": "paas",
+			"rgKey" : "database",
+			"deploy" : [
+				{
+					"env" : "devtest",
+					"enabled" : "true",
+					"kvKey" : "devops",
+					"adminRoleGroup" : "devops",
+					"ipAccessType" : "dbaccess",
+					"locations" : "syd",
+					"primaryLocation": "syd"
+					
+				},
+				{
+					"env" : "prod",
+					"enabled" : "true",
+					"kvKey" : "devopsprod",
+					"adminRoleGroup" : "devops",
+					"locations" : "syd,mel",
+					"primaryLocation": "syd",
+					"secondaryLocation": "mel"
+				}
+			]
+		}
+	]
+
+ 	
+}
